@@ -24,9 +24,7 @@ def fetch_and_save_sequences(query, total_sequences, batch_size=100, filename="p
         save_sequences_to_file(sequences, filename)
         print(f"Fetched and saved sequences {start + 1} to {start + batch_size}")
 
-# Define your query and the total number of sequences you want to fetch
-query = "reviewed:true"  # Example query to fetch reviewed (Swiss-Prot) sequences
-total_sequences = 1000  # Total number of sequences you want to fetch
+query = "reviewed:true" 
+total_sequences = 1000
 
-# Fetch and save sequences
 fetch_and_save_sequences(query, total_sequences)
