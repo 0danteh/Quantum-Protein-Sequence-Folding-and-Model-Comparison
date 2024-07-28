@@ -41,7 +41,9 @@ def extract_sequences_with_headers_from_fasta(fasta_file):
             entries.append((header, sequence))
     return entries
 
-
+fasta_file = "protein_sequences.fasta"
+entries = extract_sequences_with_headers_from_fasta(fasta_file)
+print(f"Extracted {len(entries)} entries")
 
 query = "reviewed:true" 
 total_sequences = 1000
