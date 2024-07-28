@@ -5,7 +5,7 @@ from sklearn.preprocessing import LabelEncoder
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
 from keras.models import Sequential
-from keras.layers import Embedding, LSTM, Dense, Bidirectional
+from keras.layers import Embedding, LSTM, Dense, Bidirectional, Dropout
 from keras.callbacks import ModelCheckpoint
 import pennylane as qml
 from pennylane import numpy as npq
@@ -15,12 +15,7 @@ import tracemalloc
 
 def fetch_uniprot_sequences(query, format='fasta', limit=100, offset=0):
     base_url = "https://rest.uniprot.org/uniprotkb/search"
-    params = {
-        'query': query,
-        'format': format,
-        'size': limit,
-        'offset': offset
-    }
+    params = {'query': query, 'format': format, 'size': limit, 'offset': offset}
     response = requests.get(base_url, params=params)
     if response.status_code == 200:
         return response.text
@@ -94,7 +89,9 @@ def build_classical_model(vocab_size, max_length):
     model = Sequential([
         Embedding(input_dim=vocab_size, output_dim=64, input_length=max_length),
         Bidirectional(LSTM(64, return_sequences=True)),
+        Dropout(0.5),
         Bidirectional(LSTM(64)),
+        Dropout(0.5),
         Dense(64, activation='relu'),
         Dense(vocab_size, activation='softmax')
     ])
@@ -105,7 +102,9 @@ def build_hybrid_model(vocab_size, max_length):
     inputs = tf.keras.Input(shape=(max_length,))
     embedding = Embedding(input_dim=vocab_size, output_dim=64, input_length=max_length)(inputs)
     lstm = Bidirectional(LSTM(64, return_sequences=True))(embedding)
+    lstm = Dropout(0.5)(lstm)
     lstm = Bidirectional(LSTM(64))(lstm)
+    lstm = Dropout(0.5)(lstm)
     quantum_output = quantum_layer(lstm)
     dense = Dense(64, activation='relu')(quantum_output)
     outputs = Dense(vocab_size, activation='softmax')(dense)
