@@ -24,6 +24,21 @@ def fetch_and_save_sequences(query, total_sequences, batch_size=100, filename="p
         save_sequences_to_file(sequences, filename)
         print(f"Fetched and saved sequences {start + 1} to {start + batch_size}")
 
+def extract_sequences_from_fasta(fasta_file):
+    with open(fasta_file, "r") as file:
+        sequences = []
+        sequence = ""
+        for line in file:
+            if line.startswith(">"):
+                if sequence:
+                    sequences.append(sequence)
+                    sequence = ""
+            else:
+                sequence += line.strip()
+        if sequence:
+            sequences.append(sequence)
+    return sequences
+
 def extract_sequences_with_headers_from_fasta(fasta_file):
     with open(fasta_file, "r") as file:
         entries = []
@@ -41,15 +56,24 @@ def extract_sequences_with_headers_from_fasta(fasta_file):
             entries.append((header, sequence))
     return entries
 
-fasta_file = "protein_sequences.fasta"
-entries = extract_sequences_with_headers_from_fasta(fasta_file)
-print(f"Extracted {len(entries)} entries")
-
-with open("protein_sequences_with_headers.txt", "w") as file:
-    for header, seq in entries:
-        file.write(header + "\n" + seq + "\n")
-
-query = "reviewed:true" 
+query = "reviewed:true"
 total_sequences = 1000
 
-fetch_and_save_sequences(query, total_sequences)
+fasta_filename = "protein_sequences.fasta"
+fetch_and_save_sequences(query, total_sequences, filename=fasta_filename)
+
+sequences = extract_sequences_from_fasta(fasta_filename)
+print(f"Extracted {len(sequences)} sequences")
+
+sequences_only_filename = "protein_sequences_only.txt"
+with open(sequences_only_filename, "w") as file:
+    for seq in sequences:
+        file.write(seq + "\n")
+
+entries = extract_sequences_with_headers_from_fasta(fasta_filename)
+print(f"Extracted {len(entries)} entries with headers")
+
+sequences_with_headers_filename = "protein_sequences_with_headers.txt"
+with open(sequences_with_headers_filename, "w") as file:
+    for header, seq in entries:
+        file.write(header + "\n" + seq + "\n")
