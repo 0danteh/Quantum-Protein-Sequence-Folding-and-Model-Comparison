@@ -24,6 +24,25 @@ def fetch_and_save_sequences(query, total_sequences, batch_size=100, filename="p
         save_sequences_to_file(sequences, filename)
         print(f"Fetched and saved sequences {start + 1} to {start + batch_size}")
 
+def extract_sequences_with_headers_from_fasta(fasta_file):
+    with open(fasta_file, "r") as file:
+        entries = []
+        header = ""
+        sequence = ""
+        for line in file:
+            if line.startswith(">"):
+                if sequence:
+                    entries.append((header, sequence))
+                    sequence = ""
+                header = line.strip()
+            else:
+                sequence += line.strip()
+        if sequence:
+            entries.append((header, sequence))
+    return entries
+
+
+
 query = "reviewed:true" 
 total_sequences = 1000
 
