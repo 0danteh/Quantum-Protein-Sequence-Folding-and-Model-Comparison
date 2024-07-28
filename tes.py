@@ -12,6 +12,8 @@ from pennylane import numpy as npq
 import tensorflow as tf
 import tracemalloc
 
+tf.config.run_functions_eagerly(True)
+
 def fetch_uniprot_sequences(query, format='fasta', limit=100, offset=0):
     base_url = "https://rest.uniprot.org/uniprotkb/search"
     params = {'query': query, 'format': format, 'size': limit, 'offset': offset}
@@ -116,6 +118,9 @@ class QuantumLayer(tf.keras.layers.Layer):
     def call(self, inputs):
         return tf.cast(self.qlayer(inputs), dtype=tf.float32)
 
+    def compute_output_shape(self, input_shape):
+        return (input_shape[0], self.n_qubits)
+
 def build_hybrid_model(vocab_size, max_length):
     inputs = tf.keras.Input(shape=(max_length,))
     embedding = Embedding(input_dim=vocab_size, output_dim=64, input_length=max_length)(inputs)
@@ -153,7 +158,6 @@ y = np.zeros((X.shape[0], vocab_size))
 for i, seq in enumerate(padded_sequences):
     y[i, seq[-1]] = 1
 
-# Classical Model Training
 print("Training Classical Model...")
 model = build_classical_model(vocab_size, X.shape[1])
 checkpoint = ModelCheckpoint("classical_model.h5", monitor='loss', verbose=1, save_best_only=True, mode='min')
@@ -164,7 +168,6 @@ print(f"Classical Model Memory Usage: Current = {current_memory} MB, Peak = {pea
 print(f"Classical Model Accuracy: {accuracy * 100:.2f}%")
 print(f"Classical Model Validation Accuracy: {val_accuracy * 100:.2f}%")
 
-# Hybrid Model Training
 print("\nTraining Hybrid Model...")
 hybrid_model = build_hybrid_model(vocab_size, X.shape[1])
 checkpoint_hybrid = ModelCheckpoint("hybrid_model.h5", monitor='loss', verbose=1, save_best_only=True, mode='min')
@@ -175,7 +178,6 @@ print(f"Hybrid Model Memory Usage: Current = {current_memory} MB, Peak = {peak_m
 print(f"Hybrid Model Accuracy: {accuracy * 100:.2f}%")
 print(f"Hybrid Model Validation Accuracy: {val_accuracy * 100:.2f}%")
 
-# Function to generate a sequence
 def generate_sequence(model, seed_sequence, max_length):
     generated_sequence = seed_sequence.copy()
     for _ in range(max_length - len(seed_sequence)):
@@ -185,7 +187,6 @@ def generate_sequence(model, seed_sequence, max_length):
         generated_sequence.append(next_char_index)
     return generated_sequence
 
-# Generate sequences using both models
 print("\nGenerating sequences...")
 seed_sequence = padded_sequences[0][:10].tolist()  # Use the first 10 characters of the first sequence as seed
 print("Seed sequence:", ''.join([int_to_char[i] for i in seed_sequence]))
@@ -199,7 +200,6 @@ print(''.join([int_to_char[i] for i in classical_generated]))
 print("\nHybrid Model Generated Sequence:")
 print(''.join([int_to_char[i] for i in hybrid_generated]))
 
-# Compare the generated sequences
 print("\nComparing generated sequences:")
 for i, (c, h) in enumerate(zip(classical_generated, hybrid_generated)):
     if c != h:
