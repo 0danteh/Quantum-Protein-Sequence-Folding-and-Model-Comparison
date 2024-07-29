@@ -17,3 +17,7 @@ Proteins are composed of amino acids, and their sequences determine their struct
 4. The hybrid model is trained using protein sequences. Early stopping is employed to prevent overfitting.
 5. For comparison, a classical LSTM model is also built and benchmarked. Training time and memory usage are measured.
    
+## Results and Analysis
+
+- The hybrid quantum-classical model and classical model are compared based on training time, memory usage, and accuracy.
+- Insights into the potential benefits of quantum layers in neural networks for protein sequence analysis are discussed.
