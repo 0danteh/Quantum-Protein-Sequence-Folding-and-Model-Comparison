@@ -159,26 +159,6 @@ history = hybrid_model.fit(X, y, epochs=20, batch_size=64, validation_split=0.2,
 print(f"Final training accuracy: {history.history['accuracy'][-1]:.4f}")
 print(f"Final validation accuracy: {history.history['val_accuracy'][-1]:.4f}")
 
-plt.figure(figsize=(12, 4))
-plt.subplot(1, 2, 1)
-plt.plot(history.history['accuracy'], label='Training Accuracy')
-plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
-plt.title('Model Accuracy')
-plt.xlabel('Epoch')
-plt.ylabel('Accuracy')
-plt.legend()
-
-plt.subplot(1, 2, 2)
-plt.plot(history.history['loss'], label='Training Loss')
-plt.plot(history.history['val_loss'], label='Validation Loss')
-plt.title('Model Loss')
-plt.xlabel('Epoch')
-plt.ylabel('Loss')
-plt.legend()
-
-plt.tight_layout()
-plt.show()
-
 hybrid_model.save("hybrid_model.h5")
 print("Model saved successfully.")
 
@@ -204,7 +184,6 @@ def benchmark_training(model, X, y, epochs=10, batch_size=32):
     tracemalloc.stop()
     return history, training_time, current, peak
 
-# Train and evaluate classical model
 classical_model = build_classical_model(vocab_size, X.shape[1])
 history_classical, training_time_classical, mem_usage_classical, mem_peak_classical = benchmark_training(
     classical_model, X, y, epochs=10, batch_size=32)
