@@ -21,3 +21,7 @@ Proteins are composed of amino acids, and their sequences determine their struct
 
 - The hybrid quantum-classical model and classical model are compared based on training time, memory usage, and accuracy.
 - Insights into the potential benefits of quantum layers in neural networks for protein sequence analysis are discussed.
+
+# Conclusion
+
+This project demonstrates the integration of quantum computing with classical neural networks for protein sequence analysis. While the hybrid model shows promise, further research and optimization are necessary to fully realize the benefits of quantum computing in bioinformatics.
