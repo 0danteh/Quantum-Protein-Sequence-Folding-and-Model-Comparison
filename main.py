@@ -12,10 +12,8 @@ from keras.regularizers import l2
 import matplotlib.pyplot as plt
 import tracemalloc
 
-# Set TensorFlow to eager execution
 tf.config.run_functions_eagerly(True)
 
-# Fetch and save sequences
 def fetch_uniprot_sequences(query, format='fasta', limit=100, offset=0):
     base_url = "https://rest.uniprot.org/uniprotkb/search"
     params = {'query': query, 'format': format, 'size': limit, 'offset': offset}
@@ -39,7 +37,6 @@ query = "reviewed:true"
 total_sequences = 100
 fetch_and_save_sequences(query, total_sequences)
 
-# Extract sequences from FASTA file
 def extract_sequences_from_fasta(fasta_file):
     with open(fasta_file, "r") as file:
         sequences = []
@@ -63,7 +60,6 @@ with open("protein_sequences_only.txt", "w") as file:
     for seq in sequences:
         file.write(seq + "\n")
 
-# Load and preprocess sequences
 def load_sequences(filename):
     with open(filename, "r") as file:
         sequences = file.readlines()
@@ -90,7 +86,6 @@ np.save("padded_sequences.npy", padded_sequences)
 np.save("char_to_int.npy", char_to_int)
 np.save("int_to_char.npy", int_to_char)
 
-# Load sequences and prepare data
 padded_sequences = np.load("padded_sequences.npy")
 char_to_int = np.load("char_to_int.npy", allow_pickle=True).item()
 int_to_char = np.load("int_to_char.npy", allow_pickle=True).item()
@@ -102,7 +97,6 @@ y = np.zeros((X.shape[0], vocab_size))
 for i, seq in enumerate(X):
     y[i, seq[-1]] = 1
 
-# Quantum Layer and Hybrid Model
 n_qubits = 4
 dev = qml.device("default.qubit", wires=n_qubits)
 
