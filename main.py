@@ -151,7 +151,6 @@ def build_hybrid_model(vocab_size, max_length):
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
     return model
 
-# Train and evaluate Hybrid Model
 print("Building and training Hybrid Model...")
 hybrid_model = build_hybrid_model(vocab_size, X.shape[1])
 early_stopping = EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)
@@ -183,7 +182,6 @@ plt.show()
 hybrid_model.save("hybrid_model.h5")
 print("Model saved successfully.")
 
-# Compare classical and hybrid models
 def build_classical_model(vocab_size, max_length):
     model = Sequential([
         Embedding(input_dim=vocab_size, output_dim=64, input_length=max_length),
@@ -214,24 +212,3 @@ history_classical, training_time_classical, mem_usage_classical, mem_peak_classi
 print(f"Classical Model Training Time: {training_time_classical:.2f} seconds")
 print(f"Classical Model Memory Usage: {mem_usage_classical / 1e6:.2f} MB")
 print(f"Classical Model Peak Memory Usage: {mem_peak_classical / 1e6:.2f} MB")
-
-# Plot classical model results
-plt.figure(figsize=(12, 4))
-plt.subplot(1, 2, 1)
-plt.plot(history_classical.history['accuracy'], label='Training Accuracy')
-plt.plot(history_classical.history['val_accuracy'], label='Validation Accuracy')
-plt.title('Classical Model Accuracy')
-plt.xlabel('Epoch')
-plt.ylabel('Accuracy')
-plt.legend()
-
-plt.subplot(1, 2, 2)
-plt.plot(history_classical.history['loss'], label='Training Loss')
-plt.plot(history_classical.history['val_loss'], label='Validation Loss')
-plt.title('Classical Model Loss')
-plt.xlabel('Epoch')
-plt.ylabel('Loss')
-plt.legend()
-
-plt.tight_layout()
-plt.show()
