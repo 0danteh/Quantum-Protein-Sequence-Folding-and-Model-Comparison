@@ -1,5 +1,3 @@
-# Protein Sequence Hybrid Quantum-Classical Neural Network
-
 ## Overview
 This project aims to explore the use of hybrid quantum-classical neural networks for the analysis and classification of protein sequences. Protein folding is a complex process, and understanding the intricacies of protein sequences can provide significant insights into biological functions and disease mechanisms. Traditional computational methods can be enhanced by quantum computing techniques, which may offer new avenues for solving problems in bioinformatics.
 
