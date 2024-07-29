@@ -9,3 +9,11 @@ Protein folding is the process by which a protein structure assumes its function
 ### Protein Sequences
 Proteins are composed of amino acids, and their sequences determine their structure and function. Analyzing protein sequences involves identifying patterns, motifs, and domains that are critical for understanding their biological roles. This project leverages the power of hybrid quantum-classical models to analyze these sequences more effectively.
 
+## Technical Coding Side
+
+1. It fetches protein sequences from the UniProt database using the REST API. The sequences are saved in FASTA format.
+2. The Sequences are extracted from the FASTA file, tokenized, and padded to a uniform length. This preprocessing is crucial for preparing the data for neural network training.
+3. The hybrid model combines classical LSTM layers with the quantum layer. This model is trained to classify protein sequences.
+4. The hybrid model is trained using protein sequences. Early stopping is employed to prevent overfitting.
+5. For comparison, a classical LSTM model is also built and benchmarked. Training time and memory usage are measured.
+   
